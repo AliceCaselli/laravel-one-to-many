@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <h1>Visualizzazione post</h1>
-        <h6>Categoria: {{$post->category->name}}</h6>
+        <h6>Categoria: {{$post->category?->name}}</h6>
 
         <hr class="mb-4">
         <div class="py-3">

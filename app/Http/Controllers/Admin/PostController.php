@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -29,7 +30,8 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view('admin.posts.create');
+        $categories = Category::all();
+        return view('admin.posts.create', compact('categories'));
     }
 
     /**
@@ -109,12 +111,14 @@ class PostController extends Controller
     {
         $validator = Validator::make($formData, [
             'title' => 'required|max:255|min:3',
-            'content' => 'required'
+            'content' => 'required',
+            'category_id' => 'nullable|exists:categories,id',
         ], [
             'title.max' => 'Il titolo deve avere massimo :max caratteri',
             'title.required' => 'Devi inserire un titolo',
             'title.min' => 'Il titolo deve avere almeno :min caratteri',
             'content.required' => 'Il post deve avere un contenuto',
+            'category_id.exists' => 'La categoria deve essere presente nel sito'
 
         ])->validate();
     }
