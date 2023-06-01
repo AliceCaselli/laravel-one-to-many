@@ -13,6 +13,9 @@
                     Slug
                 </th>
                 <th>
+                    Categoria
+                </th>
+                <th>
 
                 </th>
             </thead>
@@ -24,6 +27,9 @@
                         </td>
                         <td>
                             {{$post->slug}}
+                        </td>
+                        <td>
+                            {{$post->category?->name}}
                         </td>
                         <td>
                             <a href="{{route('admin.posts.show', $post)}}">Apri</a>

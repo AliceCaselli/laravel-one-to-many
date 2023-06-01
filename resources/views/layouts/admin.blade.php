@@ -1,3 +1,11 @@
+@php
+    
+$routeName = Route::currentRouteName();
+function routeNameContains($string){
+    return str_contains(Route::currentRouteName(), $string);
+}
+@endphp
+
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-bs-theme="dark">
 
@@ -86,21 +94,32 @@
 
     <div id="admin-layout">
         <aside id="admin-sidebar">
-            <div class="card">
-                <div class="card-header">
+            <div class="card {{ $routeName == 'admin.home' ? 'border-primary' : ''}}">
+                <div class="card-header {{$routeName == 'admin.home' ? 'text-primary' : ''}}">
                     Dashboard
                 </div>
                 <div class="list-group list-group-flush">
-                    <a href="{{route('admin.home')}}" class="list-group-item list-group-item-action">Home</a>
+                    <a href="{{route('admin.home')}}" class="list-group-item list-group-item-action {{routeNameContains('admin.home') ? 'active' : ''}}">Home</a>
                 </div>
             </div>
 
-            <div class="card {{ str_contains(Route::currentRouteName(), 'posts.') ? 'border-primary' : ''}}">
-                <div class="card-header">
+            <div class="card {{ routeNameContains('posts') ? 'border-primary' : ''}}">
+                <div class="card-header {{routeNameContains('posts') ? 'text-primary' : ''}}">
                     Post
                 </div>
                 <div class="list-group list-group-flush">
-                    <a href="{{route('admin.posts.index')}}" class="list-group-item list-group-item-action">Tutti i post</a>
+                    <a href="{{route('admin.posts.index')}}" class="list-group-item list-group-item-action {{routeNameContains('posts.index') ? 'active' : ''}}">Tutti i post</a>
+                    <a href="{{route('admin.posts.create')}}" class="list-group-item list-group-item-action {{routeNameContains('posts.create') ? 'active' : ''}}">Aggiungi un post</a>
+                </div>
+            </div>
+
+            <div class="card {{ routeNameContains('categories') ? 'border-primary' : ''}}">
+                <div class="card-header {{routeNameContains('categories') ? 'text-primary' : ''}}">
+                    Categorie
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{{route('admin.categories.index')}}" class="list-group-item list-group-item-action {{routeNameContains('categories.index') ? 'active' : ''}}">Tutte le categorie</a>
+                    <a href="{{route('admin.categories.create')}}" class="list-group-item list-group-item-action {{routeNameContains('categories.create') ? 'active' : ''}}">Aggiungi una categoria</a>
                 </div>
             </div>
 
