@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
+
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -26,7 +30,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.categories.create');
     }
 
     /**
@@ -37,7 +41,17 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $formData = $request->all();
+
+        $this->validation($formData);
+
+        $newCategory['slug'] = Str::slug($formData['name'], '-');
+
+        $newCategory = new Category();
+
+        $newCategory->fill($formData);
+        $newCategory->save();
+        return redirect()->route('admin.categories.show', $newCategory);
     }
 
     /**
@@ -59,7 +73,7 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        //
+        return view('admin.categories.edit', compact('category'));
     }
 
     /**
@@ -71,7 +85,13 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $formData = $request->all();
+
+        $this->validation($formData);
+        $newCategory['slug'] = Str::slug($formData['name'], '-');
+        $category->update($formData);
+
+        return redirect()->route('admin.categories.show', $category);
     }
 
     /**
@@ -82,6 +102,22 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        $category->delete();
+        return redirect()->route('admin.categories.index');
+    }
+
+    private function validation($formData)
+    {
+        $validator = Validator::make($formData, [
+            'name' => 'max:100|required|unique:App\Model\Category,name',
+            'description' => 'required',
+        ], [
+            'name.max' => 'Il nome deve contenere :max caratteri',
+            'name.required' => 'Il nome deve essere compilato',
+            'nome.unique' => 'Categoria già esistente',
+            'description.required' => 'Devi inserire la descrizione'
+
+        ])->validate();
+        return $validator;
     }
 }
